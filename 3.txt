@@ -1,0 +1,24 @@
+FROM golang
+# berguna untuk menggunakan base image "golang" yang tersedia di https://hub.docker.com
+
+ADD . /go/src/github.com/telkomdev/indihome/backend
+# memindahkan semua file yang ada dalam active working directory ke container dalam folder /go/src/github.com/telkomdev/indihome/backend
+
+WORKDIR /go/src/github.com/telkomdev/indihome
+# set active working directory dalam container ke /go/src/github.com/telkomdev/indihome
+# sama seperti cd /go/src/github.com/telkomdev/indihome
+
+RUN go get github.com/tools/godep
+# menjalankan perintah "go get github.com/tools/godep" dalam container
+
+RUN godep restore
+# menjalankan perintah "godep restore" dalam container
+
+RUN go install github.com/telkomdev/indihome
+# menjalankan perintah "go install github.com/telkomdev/indihome" dalam container
+
+ENTRYPOINT /go/bin/indihome
+# ketika container di-inisialisasi, perintah /go/bin/indihome akan selalu dieksekusi tanpa bisa di-ignore
+
+LISTEN 80
+# membuka port 80 ke public
